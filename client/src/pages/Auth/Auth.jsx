@@ -29,9 +29,7 @@ const Auth = () => {
         ? dispatch(signUp(data))
         : setConfirmPass(false);
     } else {
-      {
-        dispatch(login(data));
-      }
+      dispatch(login(data));
     }
   };
 

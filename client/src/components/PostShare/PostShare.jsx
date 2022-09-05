@@ -6,16 +6,33 @@ import { UilPlayCircle } from "@iconscout/react-unicons";
 import { UilLocationPoint } from "@iconscout/react-unicons";
 import { UilSchedule } from "@iconscout/react-unicons";
 import { UilTimes } from "@iconscout/react-unicons";
+import { useSelector } from "react-redux";
 
 const PostShare = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
+  const desc = useRef();
+  const { user } = useSelector((state) => state.authReducer.authData);
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      setImage({
-        image: URL.createObjectURL(img),
-      });
+      setImage(img);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newPost = {
+      userId: user._id,
+      desc: desc.current.value,
+    };
+    if (image) {
+      const data = new FormData();
+      const filename = Date.now() + image.name;
+      data.append("name", filename);
+      data.append("file", image);
+      newPost.image = filename;
+      console.log(newPost);
     }
   };
 
@@ -23,7 +40,12 @@ const PostShare = () => {
     <div className="PostShare">
       <img src={profile} alt="" />
       <div>
-        <input type="text" placeholder="What's On your Mind?" />
+        <input
+          ref={desc}
+          required
+          type="text"
+          placeholder="What's On your Mind?"
+        />
         <div className="postOptions">
           <div
             className="option"
@@ -45,7 +67,9 @@ const PostShare = () => {
             <UilLocationPoint />
             Location
           </div>
-          <button className="button ps-button">Fly</button>
+          <button className="button ps-button" onClick={handleSubmit}>
+            Fly
+          </button>
           <div style={{ display: "none" }}>
             <input
               type="file"
@@ -59,7 +83,7 @@ const PostShare = () => {
         {image && (
           <div className="previewImage">
             <UilTimes onClick={() => setImage(null)} />
-            <img src={image.image} alt="" />
+            <img src={URL.createObjectURL(image)} alt="" />
           </div>
         )}
       </div>

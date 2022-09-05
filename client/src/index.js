@@ -4,13 +4,18 @@ import { Provider } from "react-redux";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./Store/ReduxStore";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const root = document.getElementById("root");
 //const root = ReactDOM.createRoot(document.getElementById("root"));
 render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<App />} />
+        </Routes>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   root

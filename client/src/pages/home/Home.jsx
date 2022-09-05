@@ -10,8 +10,6 @@ const Home = () => {
       <Profile />
       <Postside />
       <RightSide />
-
-      <div className="rightSide">Right</div>
     </div>
   );
 };
