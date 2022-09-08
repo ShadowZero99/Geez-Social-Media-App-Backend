@@ -12,7 +12,7 @@ const PostShare = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
   const desc = useRef();
-  const { user } = useSelector((state) => state.authReducer.authData);
+  const user = useSelector((state) => state.authReducer.authData);
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
