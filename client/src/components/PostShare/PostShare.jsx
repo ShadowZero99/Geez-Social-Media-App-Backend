@@ -6,11 +6,15 @@ import { UilPlayCircle } from "@iconscout/react-unicons";
 import { UilLocationPoint } from "@iconscout/react-unicons";
 import { UilSchedule } from "@iconscout/react-unicons";
 import { UilTimes } from "@iconscout/react-unicons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadImage, uploadPost } from "../../actions/UploadAction";
 
 const PostShare = () => {
+  const loading = useSelector((state) => state.postreducer.uploading);
   const [image, setImage] = useState(null);
   const imageRef = useRef();
+
+  const Dispatch = useDispatch();
   const desc = useRef();
   const user = useSelector((state) => state.authReducer.authData);
   const onImageChange = (event) => {
@@ -18,6 +22,11 @@ const PostShare = () => {
       let img = event.target.files[0];
       setImage(img);
     }
+  };
+
+  const reset = () => {
+    setImage(null);
+    desc.current.value = "";
   };
 
   const handleSubmit = (e) => {
@@ -33,7 +42,15 @@ const PostShare = () => {
       data.append("file", image);
       newPost.image = filename;
       console.log(newPost);
+
+      try {
+        Dispatch(uploadImage(data));
+      } catch (error) {
+        console.log(error);
+      }
     }
+    Dispatch(uploadPost(newPost));
+    reset();
   };
 
   return (
@@ -67,8 +84,12 @@ const PostShare = () => {
             <UilLocationPoint />
             Location
           </div>
-          <button className="button ps-button" onClick={handleSubmit}>
-            Fly
+          <button
+            className="button ps-button"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? "Uploading..." : "Fly"}
           </button>
           <div style={{ display: "none" }}>
             <input
