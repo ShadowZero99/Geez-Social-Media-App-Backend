@@ -9,7 +9,7 @@ import { getTimelinePosts } from "../../actions/PostsAction";
 const Posts = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.authData);
-  const { posts, loading } = useSelector((state) => state.postreducer);
+  const { posts } = useSelector((state) => state.postreducer);
 
   useEffect(() => {
     dispatch(getTimelinePosts(user._id));
