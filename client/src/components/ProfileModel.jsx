@@ -1,22 +1,66 @@
 import React from "react";
 import { Modal, useMantineTheme } from "@mantine/core";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { updateUser } from "../actions/userAction";
+import { uploadImage } from "../actions/UploadAction";
+
 function ProfileModel({ modelOpened, setModelOpened, data }) {
   const theme = useMantineTheme();
 
   const { password, ...other } = data;
   const [formData, setFormData] = useState(other);
-  //const [profileImage, setProfileImage] = useState(null);
-  //const [coverimage, setCoverImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const [coverimage, setCoverImage] = useState(null);
   const Dispatch = useDispatch();
   const params = useParams();
 
-  const user = useSelector((state) => state.authReducer.authData);
+  //const user = useSelector((state) => state.authReducer.authData);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      event.target.name === "profileImage"
+        ? setProfileImage(img)
+        : setCoverImage(img);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let UserData = formData;
+    if (profileImage) {
+      const data = new FormData();
+      const fileName = Date.now() + profileImage.name;
+      data.append("name", fileName);
+      data.append("file", profileImage);
+      UserData.profilePicture = fileName;
+      try {
+        Dispatch(uploadImage(data));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (coverimage) {
+      const data = new FormData();
+      const fileNam = Date.now() + coverimage.name;
+      data.append("name", fileNam);
+      data.append("file", coverimage);
+      UserData.coverpicture = fileNam;
+      try {
+        Dispatch(uploadImage(data));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    Dispatch(updateUser(params.id, UserData));
+    setModelOpened(false);
   };
 
   return (
@@ -93,11 +137,13 @@ function ProfileModel({ modelOpened, setModelOpened, data }) {
         </div>
         <div>
           Profile Image
-          <input type="file" name="profileImage" />
+          <input type="file" name="profilePicture" onChange={onImageChange} />
           Cover Image
-          <input type="file" name="coverImage" />
+          <input type="file" name="coverpicture" onChange={onImageChange} />
         </div>
-        <button className="button infoButton">Update</button>
+        <button className="button infoButton" onClick={handleSubmit}>
+          Update
+        </button>
       </form>
     </Modal>
   );

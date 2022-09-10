@@ -14,11 +14,9 @@ const InfoCard = () => {
   const Dispatch = useDispatch();
   const params = useParams();
 
-  const profileUserId = params.id;
   const [profileUser, setProfileUser] = useState({});
-
+  const profileUserId = params.id;
   const user = useSelector((state) => state.authReducer.authData);
-
   useEffect(() => {
     const fetchProfileUser = async () => {
       if (profileUserId === user._id) {
@@ -68,12 +66,21 @@ const InfoCard = () => {
         </span>
         <span>{profileUser.lastname} </span>
       </div>
+
+      <div className="info">
+        <span>
+          <b>About </b>
+        </span>
+        <span>{profileUser.about} </span>
+      </div>
+
       <div className="info">
         <span>
           <b>Status </b>
         </span>
         <span>{profileUser.relationship} </span>
       </div>
+
       <div className="info">
         <span>
           <b>Lives in </b>
@@ -85,6 +92,12 @@ const InfoCard = () => {
           <b>Works at </b>
         </span>
         <span>{profileUser.worksAt}</span>
+      </div>
+      <div className="info">
+        <span>
+          <b>Country </b>
+        </span>
+        <span>{profileUser.country} </span>
       </div>
 
       <button className="button logout-button" onClick={handleLogOut}>
