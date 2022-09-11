@@ -5,21 +5,26 @@ import Post from "../Post/Post";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getTimelinePosts } from "../../actions/PostsAction";
+import { useParams } from "react-router-dom";
 
 const Posts = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.authData);
-  const { posts } = useSelector((state) => state.postreducer);
+  let { posts, loading } = useSelector((state) => state.postreducer);
+  const params = useParams();
 
   useEffect(() => {
     dispatch(getTimelinePosts(user._id));
   });
-
+  if (!posts) return "no Posts!";
+  if (params.id) posts = posts.filter((post) => post.userId === params.id);
   return (
     <div className="Posts">
-      {posts.map((post, id) => {
-        return <Post data={post} id={id} />;
-      })}
+      {loading
+        ? "Updating Posts"
+        : posts.map((post, id) => {
+            return <Post data={post} id={id} />;
+          })}
     </div>
   );
 };
