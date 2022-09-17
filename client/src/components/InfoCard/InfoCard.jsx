@@ -10,28 +10,31 @@ import * as UserApi from "../../api/UserRequest.js";
 import { logOut } from "../../actions/AuthAction";
 
 const InfoCard = () => {
-  const [modelOpened, setModelOpened] = useState(false);
   const Dispatch = useDispatch();
   const params = useParams();
+  const [modelOpened, setModelOpened] = useState(false);
 
   const [profileUser, setProfileUser] = useState({});
   const profileUserId = params.id;
   const user = useSelector((state) => state.authReducer.authData);
+
+  const handleLogOut = () => {
+    Dispatch(logOut());
+  };
+
   useEffect(() => {
     const fetchProfileUser = async () => {
       if (profileUserId === user._id) {
         setProfileUser(user);
       } else {
+        console.log("fetching");
         const profileUser = await UserApi.getUser(profileUserId);
         setProfileUser(profileUser);
+        console.log(profileUser);
       }
     };
     fetchProfileUser();
   }, [user]);
-
-  const handleLogOut = () => {
-    Dispatch(logOut());
-  };
 
   return (
     <div className="InfoCard">

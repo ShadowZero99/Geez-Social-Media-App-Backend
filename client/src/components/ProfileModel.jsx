@@ -49,10 +49,10 @@ function ProfileModel({ modelOpened, setModelOpened, data }) {
 
     if (coverimage) {
       const data = new FormData();
-      const fileNam = Date.now() + coverimage.name;
-      data.append("name", fileNam);
+      const fileName = Date.now() + coverimage.name;
+      data.append("name", fileName);
       data.append("file", coverimage);
-      UserData.coverpicture = fileNam;
+      UserData.coverpicture = fileName;
       try {
         Dispatch(uploadImage(data));
       } catch (error) {
@@ -137,9 +137,9 @@ function ProfileModel({ modelOpened, setModelOpened, data }) {
         </div>
         <div>
           Profile Image
-          <input type="file" name="profilePicture" onChange={onImageChange} />
+          <input type="file" name="profileImage" onChange={onImageChange} />
           Cover Image
-          <input type="file" name="coverpicture" onChange={onImageChange} />
+          <input type="file" name="coverimage" onChange={onImageChange} />
         </div>
         <button className="button infoButton" onClick={handleSubmit}>
           Update
